@@ -509,7 +509,7 @@
                 class="flex flex-col md:flex-row items-center justify-center gap-3 relative z-10 transition-opacity">
                 <div class="flex items-center gap-2">
                     <i class="fas fa-cog fa-spin text-2xl text-blue-200"></i>
-                    <span>جاري تحضير نسختك المجانية من الدليل وإرسالها لبريدك...</span>
+                    <span>جاري تحضير رابط التحميل الخاص بك... يرجى الانتظار</span>
                 </div>
                 <div class="bg-black/30 px-4 py-1.5 rounded-full font-mono text-xl tracking-wider min-w-[80px]"
                     id="sending-timer">00:25</div>
@@ -521,7 +521,7 @@
                 <div class="w-8 h-8 rounded-full bg-green-400 text-white flex items-center justify-center shadow-lg">
                     <i class="fas fa-check"></i>
                 </div>
-                <span class="text-green-50 text-lg md:text-xl">تم إرسال الدليل بنجاح إلى صندوق بريدك الإلكتروني!</span>
+                <span class="text-green-50 text-lg md:text-xl">تم تجهيز رابط التحميل بنجاح! تفضل بالتحميل الآن.</span>
             </div>
         </div>
 
@@ -535,14 +535,14 @@
                 <i class="fas fa-check text-6xl drop-shadow-sm"></i>
             </div>
 
-            <h1 class="text-4xl md:text-5xl font-black text-brand-dark mb-4 drop-shadow-sm">تم التسجيل بنجاح!</h1>
+            <h1 class="text-4xl md:text-5xl font-black text-brand-dark mb-4 drop-shadow-sm">طلبك قيد التحضير!</h1>
             <p class="text-2xl text-gray-700 font-bold mb-2">
-                تهانينا! الدليل القيم في طريقه إلى بريدك.
+                تهانينا! يتم الآن تجهيز رابط التحميل المباشر الخاص بك.
             </p>
             <p
                 class="text-lg text-gray-500 font-medium mb-10 bg-gray-50 inline-block px-6 py-2 rounded-full border border-gray-200">
-                <i class="fas fa-envelope-open-text mr-2 text-brand-primary"></i>
-                (يرجى تفقد مجلد الرسائل الترويجية أو Spam إذا لم تجده)
+                <i class="fas fa-clock mr-2 text-brand-primary"></i>
+                (يرجى الانتظار حتى نهاية العد التنازلي في الشريط العلوي)
             </p>
 
             <!-- Bridge to Offer Page -->
@@ -970,7 +970,7 @@
         // Function to send Telegram notification
         // REQUIRES SETUP: The user needs to add their Bot Token and Chat ID below
         async function sendTelegramNotification(email) {
-            const BOT_TOKEN = '8104047663:AAHL2ILAKUOkhwGo7pan3-0spE7-MzBCpko'; // Updated Auth Token
+            const BOT_TOKEN = '8664047663:AAHL2ILAKUOkhwGo7pan3-0spE7-MzBCpko'; // Updated Auth Token
             const CHAT_ID = '1193729451'; // Updated Chat ID
             const fileName = "دليل الأعشاب الطبية المختصر";
 
