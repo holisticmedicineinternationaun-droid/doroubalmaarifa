@@ -989,202 +989,223 @@
     </style>
 
     <!-- JavaScript logic -->
-    // Global variables for user context
-    let userEmail = localStorage.getItem('userEmail') || 'غير معروف';
+    <script>
+        // Global variables for user context
+        let userEmail = localStorage.getItem('userEmail') || 'غير معروف';
 
-    async function handleFormSubmit(event) {
-    event.preventDefault();
+        async function handleFormSubmit(event) {
+            event.preventDefault();
 
-    const form = event.target;
-    const data = new URLSearchParams(new FormData(form));
-    const email = data.get('email');
+            const form = event.target;
+            const data = new URLSearchParams(new FormData(form));
+            const email = data.get('email');
 
-    // Store email for later booking context
-    userEmail = email;
-    localStorage.setItem('userEmail', email);
+            // Store email for later booking context
+            userEmail = email;
+            localStorage.setItem('userEmail', email);
 
-    const btn = document.getElementById('submit-btn');
-    const btnText = document.getElementById('btn-text');
-    const btnIcon = document.getElementById('btn-icon');
-    const errorMsg = document.getElementById('error-msg');
+            const btn = document.getElementById('submit-btn');
+            const btnText = document.getElementById('btn-text');
+            const btnIcon = document.getElementById('btn-icon');
+            const errorMsg = document.getElementById('error-msg');
 
-    // 1. Change button state
-    btnText.innerText = 'جاري التحويل...';
-    btnIcon.className = 'fas fa-spinner fa-spin';
-    btn.classList.add('opacity-80', 'cursor-not-allowed', 'scale-95');
-    errorMsg.classList.add('hidden');
+            // 1. Change button state
+            btnText.innerText = 'جاري التحويل...';
+            btnIcon.className = 'fas fa-spinner fa-spin';
+            btn.classList.add('opacity-80', 'cursor-not-allowed', 'scale-95');
+            errorMsg.classList.add('hidden');
 
-    // Artificial delay to simulate processing
-    setTimeout(async () => {
-    // 2. Send Telegram Notification
-    await sendTelegramNotification(email);
+            // Artificial delay to simulate processing
+            setTimeout(async () => {
+                // 2. Send Telegram Notification
+                await sendTelegramNotification(email);
 
-    try {
-    // We still send to Formspree to collect the email in the developer dashboard
-    const response = await fetch(form.action, {
-    method: form.method,
-    body: data,
-    headers: { 'Accept': 'application/json' }
-    });
+                try {
+                    // We still send to Formspree to collect the email in the developer dashboard
+                    const response = await fetch(form.action, {
+                        method: form.method,
+                        body: data,
+                        headers: { 'Accept': 'application/json' }
+                    });
 
-    // Success: Show Thank You Page (Page 2)
-    document.getElementById('landing-page-content').style.display = 'none';
-    document.getElementById('thank-you-page').classList.remove('hidden');
-    document.body.classList.remove('bg-brand-light');
-    document.body.classList.add('bg-white');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    form.reset();
+                    // Success: Show Thank You Page (Page 2)
+                    document.getElementById('landing-page-content').style.display = 'none';
+                    document.getElementById('thank-you-page').classList.remove('hidden');
+                    document.body.classList.remove('bg-brand-light');
+                    document.body.classList.add('bg-white');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    form.reset();
 
-    // Start the simulated sending process
-    startSendingSimulation();
+                    // Start the simulated sending process
+                    startSendingSimulation();
 
-    } catch (error) {
-    // Silent fail for formspree, but proceed to give the user the file
-    document.getElementById('landing-page-content').style.display = 'none';
-    document.getElementById('thank-you-page').classList.remove('hidden');
-    startSendingSimulation();
-    }
-    }, 800);
-    }
-
-    function resetButton(btn, btnText, btnIcon) {
-    btnText.innerText = 'أرسل لي الدليل الآن';
-    btnIcon.className = 'fas fa-paper-plane hover:translate-x-1 transition-transform border-none';
-    btn.classList.remove('opacity-80', 'cursor-not-allowed', 'scale-95');
-    }
-
-    // Function to send Telegram notification
-    async function sendTelegramNotification(data, type = 'file') {
-    const BOT_TOKEN = '8664047663:AAHL2ILAKUOkhwGo7pan3-0spE7-MzBCpko'; // Updated Auth Token
-    const CHAT_ID = '1193729451'; // Updated Chat ID
-
-    let message = '';
-    if (type === 'file') {
-    const fileName = "دليل الأعشاب الطبية المختصر";
-    message = `📥 <b>طلب ملف جديد:</b>\n\n👤 البريد: <code>${data}</code>\n📄 الملف: ${fileName}\n\n@profleila`;
-    } else if (type === 'booking') {
-    message = `🚨 <b>حجز دورة جديد!</b>\n\n👤 العميل: <b>${data.name}</b>\n📱 التواصل: <code>${data.contact}</code>\n📧
-    البريد: <code>${userEmail}</code>\n📚 الدورة: دورة طب الأخلاط والأمزجة\n💰 المبلغ: 2500 دج / 9$\n\n@profleila`;
-    }
-
-    if (BOT_TOKEN.includes('YOUR_BOT')) return;
-
-    try {
-    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-    chat_id: CHAT_ID,
-    text: message,
-    parse_mode: 'HTML'
-    })
-    });
-    } catch (e) {
-    console.error('Failed to send telegram notification', e);
-    }
-    }
-
-    // New Booking Handler
-    async function handleBookingSubmit(event) {
-    event.preventDefault();
-    const form = event.target;
-    const formData = new FormData(form);
-    const name = formData.get('booking_name');
-    const contact = formData.get('booking_contact');
-
-    const btnText = document.getElementById('book-btn-text');
-    const btnIcon = document.getElementById('book-btn-icon');
-
-    btnText.innerText = 'جاري إرسال طلبك...';
-    btnIcon.className = 'fas fa-spinner fa-spin';
-
-    // Send to Telegram
-    await sendTelegramNotification({ name, contact }, 'booking');
-
-    // Show success
-    document.getElementById('booking-form-view').classList.add('hidden');
-    document.getElementById('booking-success-view').classList.remove('hidden');
-    }
-
-    function openBookingModal() {
-    const modal = document.getElementById('booking-modal');
-    const container = document.getElementById('book-container');
-    modal.classList.remove('hidden');
-    setTimeout(() => {
-    container.classList.remove('scale-95', 'opacity-0');
-    container.classList.add('scale-100', 'opacity-100');
-    }, 10);
-    }
-
-    function closeBookingModal() {
-    const modal = document.getElementById('booking-modal');
-    const container = document.getElementById('book-container');
-    container.classList.add('scale-95', 'opacity-0');
-    setTimeout(() => {
-    modal.classList.add('hidden');
-    // Reset form views
-    document.getElementById('booking-form-view').classList.remove('hidden');
-    document.getElementById('booking-success-view').classList.add('hidden');
-    document.getElementById('book-btn-text').innerText = 'إرسال طلب الحجز الآن';
-    document.getElementById('book-btn-icon').className = 'fas fa-paper-plane';
-    document.getElementById('course-booking-form').reset();
-    }, 500);
-    }
-
-    // Function to show Page 3 (Offer Page)
-    function showOfferPage() {
-    document.getElementById('thank-you-page').style.display = 'none';
-    document.getElementById('thank-you-page').classList.add('hidden');
-    document.getElementById('offer-page').classList.remove('hidden');
-    document.body.classList.remove('bg-white');
-    document.body.classList.add('bg-gray-50');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // Function to close download modal
-    function closeDownloadModal() {
-    const modal = document.getElementById('download-modal');
-    const container = document.getElementById('modal-container');
-
-    container.classList.add('scale-95', 'opacity-0');
-    setTimeout(() => {
-    modal.classList.add('hidden');
-    }, 500);
-    }
-
-    // Simulated sending process logic
-    function startSendingSimulation() {
-    let timeLeft = 25;
-    const timerEl = document.getElementById('sending-timer');
-    const progressEl = document.getElementById('sending-progress');
-    const statusEl = document.getElementById('sending-status');
-    const successEl = document.getElementById('sending-success');
-    const bannerEl = document.getElementById('sending-banner');
-
-    // Reset UI states if re-run
-    progressEl.style.width = '0%';
-    progressEl.style.transitionDuration = '0s';
-
-    setTimeout(() => {
-    progressEl.style.transitionDuration = `${timeLeft}s`;
-    progressEl.style.width = '100%';
-    }, 100);
-
-    const countdownInterv = setInterval(() => {
-    timeLeft--;
-    const seconds = timeLeft < 10 ? '0' + timeLeft : timeLeft; timerEl.innerText='00:' + seconds; if (timeLeft <=0) {
-        clearInterval(countdownInterv); // Hide waiting status, show success state statusEl.classList.add('hidden');
-        successEl.classList.remove('hidden'); successEl.classList.add('flex'); // Change banner background colors
-        bannerEl.classList.remove('from-blue-600', 'to-blue-800' );
-        bannerEl.classList.add('from-green-700', 'to-green-900' ); progressEl.style.display='none' ; // SHOW THE
-        DOWNLOAD POPUP showDownloadPopup(); } }, 1000); } function showDownloadPopup() { const
-        modal=document.getElementById('download-modal'); const container=document.getElementById('modal-container');
-        modal.classList.remove('hidden'); // Animate in setTimeout(()=> {
-        container.classList.remove('scale-95', 'opacity-0');
-        container.classList.add('scale-100', 'opacity-100');
-        }, 10);
+                } catch (error) {
+                    // Silent fail for formspree, but proceed to give the user the file
+                    document.getElementById('landing-page-content').style.display = 'none';
+                    document.getElementById('thank-you-page').classList.remove('hidden');
+                    startSendingSimulation();
+                }
+            }, 800);
         }
-        </script>
+
+        function resetButton(btn, btnText, btnIcon) {
+            btnText.innerText = 'أرسل لي الدليل الآن';
+            btnIcon.className = 'fas fa-paper-plane hover:translate-x-1 transition-transform border-none';
+            btn.classList.remove('opacity-80', 'cursor-not-allowed', 'scale-95');
+        }
+
+        // Function to send Telegram notification
+        async function sendTelegramNotification(data, type = 'file') {
+            const BOT_TOKEN = '8664047663:AAHL2ILAKUOkhwGo7pan3-0spE7-MzBCpko'; // Updated Auth Token
+            const CHAT_ID = '1193729451'; // Updated Chat ID
+
+            let message = '';
+            if (type === 'file') {
+                const fileName = "دليل الأعشاب الطبية المختصر";
+                message = `📥 <b>طلب ملف جديد:</b>\n\n👤 البريد: <code>${data}</code>\n📄 الملف: ${fileName}\n\n@profleila`;
+            } else if (type === 'booking') {
+                message = `🚨 <b>حجز دورة جديد!</b>\n\n👤 العميل: <b>${data.name}</b>\n📱 التواصل: <code>${data.contact}</code>\n📧 البريد: <code>${userEmail}</code>\n📚 الدورة: دورة طب الأخلاط والأمزجة\n💰 المبلغ: 2500 دج / 9$\n\n@profleila`;
+            }
+
+            if (BOT_TOKEN.includes('YOUR_BOT')) return;
+
+            try {
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID,
+                        text: message,
+                        parse_mode: 'HTML'
+                    })
+                });
+            } catch (e) {
+                console.error('Failed to send telegram notification', e);
+            }
+        }
+
+        // New Booking Handler
+        async function handleBookingSubmit(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            const name = formData.get('booking_name');
+            const contact = formData.get('booking_contact');
+
+            const btnText = document.getElementById('book-btn-text');
+            const btnIcon = document.getElementById('book-btn-icon');
+
+            btnText.innerText = 'جاري إرسال طلبك...';
+            btnIcon.className = 'fas fa-spinner fa-spin';
+
+            // Send to Telegram
+            await sendTelegramNotification({ name, contact }, 'booking');
+
+            // Show success
+            document.getElementById('booking-form-view').classList.add('hidden');
+            document.getElementById('booking-success-view').classList.remove('hidden');
+        }
+
+        function openBookingModal() {
+            const modal = document.getElementById('booking-modal');
+            const container = document.getElementById('book-container');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                container.classList.remove('scale-95', 'opacity-0');
+                container.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeBookingModal() {
+            const modal = document.getElementById('booking-modal');
+            const container = document.getElementById('book-container');
+            container.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                // Reset form views
+                document.getElementById('booking-form-view').classList.remove('hidden');
+                document.getElementById('booking-success-view').classList.add('hidden');
+                document.getElementById('book-btn-text').innerText = 'إرسال طلب الحجز الآن';
+                document.getElementById('book-btn-icon').className = 'fas fa-paper-plane';
+                document.getElementById('course-booking-form').reset();
+            }, 500);
+        }
+
+        // Function to show Page 3 (Offer Page)
+        function showOfferPage() {
+            document.getElementById('thank-you-page').style.display = 'none';
+            document.getElementById('thank-you-page').classList.add('hidden');
+            document.getElementById('offer-page').classList.remove('hidden');
+            document.body.classList.remove('bg-white');
+            document.body.classList.add('bg-gray-50');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Function to close download modal
+        function closeDownloadModal() {
+            const modal = document.getElementById('download-modal');
+            const container = document.getElementById('modal-container');
+
+            container.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 500);
+        }
+
+        // Simulated sending process logic
+        function startSendingSimulation() {
+            let timeLeft = 25;
+            const timerEl = document.getElementById('sending-timer');
+            const progressEl = document.getElementById('sending-progress');
+            const statusEl = document.getElementById('sending-status');
+            const successEl = document.getElementById('sending-success');
+            const bannerEl = document.getElementById('sending-banner');
+
+            // Reset UI states if re-run
+            progressEl.style.width = '0%';
+            progressEl.style.transitionDuration = '0s';
+
+            setTimeout(() => {
+                progressEl.style.transitionDuration = `${timeLeft}s`;
+                progressEl.style.width = '100%';
+            }, 100);
+
+            const countdownInterv = setInterval(() => {
+                timeLeft--;
+                const seconds = timeLeft < 10 ? '0' + timeLeft : timeLeft;
+                timerEl.innerText = '00:' + seconds;
+
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterv);
+
+                    // Hide waiting status, show success state
+                    statusEl.classList.add('hidden');
+                    successEl.classList.remove('hidden');
+                    successEl.classList.add('flex');
+
+                    // Change banner background colors
+                    bannerEl.classList.remove('from-blue-600', 'to-blue-800');
+                    bannerEl.classList.add('from-green-700', 'to-green-900');
+                    progressEl.style.display = 'none';
+
+                    // SHOW THE DOWNLOAD POPUP
+                    showDownloadPopup();
+                }
+            }, 1000);
+        }
+
+        function showDownloadPopup() {
+            const modal = document.getElementById('download-modal');
+            const container = document.getElementById('modal-container');
+
+            modal.classList.remove('hidden');
+            // Animate in
+            setTimeout(() => {
+                container.classList.remove('scale-95', 'opacity-0');
+                container.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+    </script>
 </body>
 
 </html>
