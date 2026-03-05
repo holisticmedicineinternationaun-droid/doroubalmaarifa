@@ -606,6 +606,74 @@
         </div>
     </div>
 
+    <!-- PAGE 5: COURSE BOOKING MODAL -->
+    <div id="booking-modal" class="hidden fixed inset-0 z-[110] flex items-center justify-center p-4">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/70 backdrop-blur-md"></div>
+
+        <!-- Modal Content -->
+        <div class="bg-white rounded-[2.5rem] shadow-2xl max-w-lg w-full relative z-10 overflow-hidden transform scale-95 opacity-0 transition-all duration-500"
+            id="book-container">
+            <div class="h-3 bg-gradient-to-r from-brand-offer via-red-400 to-brand-offer w-full"></div>
+
+            <!-- Booking Form View -->
+            <div id="booking-form-view" class="p-8 md:p-10">
+                <div class="text-center mb-8">
+                    <div
+                        class="w-16 h-16 bg-brand-offer/10 text-brand-offer rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl">
+                        <i class="fas fa-edit"></i>
+                    </div>
+                    <h2 class="text-3xl font-black text-brand-dark mb-2">تأكيد حجز مقعدك</h2>
+                    <p class="text-gray-600 font-bold">ملأ البيانات التالية لإرسال طلب حجزك فوراً</p>
+                </div>
+
+                <form id="course-booking-form" onsubmit="handleBookingSubmit(event)" class="space-y-5">
+                    <div>
+                        <label class="block text-right mb-2 font-bold text-gray-700 mr-1">الاسم الكامل</label>
+                        <input type="text" name="booking_name" required placeholder="أدخل اسمك الثلاثي"
+                            class="w-full px-6 py-4 rounded-xl border-2 border-gray-100 focus:border-brand-offer/50 focus:ring-4 focus:ring-brand-offer/10 outline-none transition-all text-lg font-medium text-right bg-gray-50/50">
+                    </div>
+                    <div>
+                        <label class="block text-right mb-2 font-bold text-gray-700 mr-1">رقم الهاتف أو معرف
+                            التلغرام</label>
+                        <input type="text" name="booking_contact" required placeholder="05XXXXXXXX أو @username"
+                            class="w-full px-6 py-4 rounded-xl border-2 border-gray-100 focus:border-brand-offer/50 focus:ring-4 focus:ring-brand-offer/10 outline-none transition-all text-lg font-medium text-right bg-gray-50/50"
+                            dir="ltr">
+                    </div>
+
+                    <button type="submit" id="book-submit-btn"
+                        class="w-full bg-brand-dark hover:bg-black text-white font-black py-5 rounded-xl shadow-xl transition-all text-xl mt-4 flex items-center justify-center gap-3 group">
+                        <span id="book-btn-text">إرسال طلب الحجز الآن</span>
+                        <i id="book-btn-icon"
+                            class="fas fa-paper-plane group-hover:translate-x-[-5px] transition-transform"></i>
+                    </button>
+
+                    <button type="button" onclick="closeBookingModal()"
+                        class="w-full text-gray-400 font-bold py-2 hover:text-gray-600 transition">تراجع</button>
+                </form>
+            </div>
+
+            <!-- Booking Success View (Hidden) -->
+            <div id="booking-success-view" class="hidden p-10 text-center animate-fade-in">
+                <div
+                    class="w-24 h-24 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-8 text-5xl shadow-inner">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h2 class="text-3xl font-black text-brand-dark mb-4">تم إرسال طلبك بنجاح!</h2>
+                <p class="text-gray-600 text-lg font-medium mb-10 leading-relaxed">
+                    لقد تلقينا طلب حجزك للدورة. يرجى الآن إرسال صورة "وصْل الدفع" لتثبيت مقعدك بشكل نهائي.
+                </p>
+
+                <a href="https://t.me/profleila" target="_blank"
+                    class="inline-flex items-center justify-center gap-3 bg-blue-600 hover:bg-blue-700 text-white font-black py-5 px-8 rounded-2xl shadow-xl hover:shadow-2xl transition duration-300 text-xl w-full">
+                    <span>أرسل الوصل عبر التلغرام</span>
+                    <i class="fab fa-telegram-plane text-2xl"></i>
+                </a>
+                <p class="mt-6 text-sm text-gray-400">يمكنك أيضاً مراسلتنا في أي وقت للاستفسار</p>
+            </div>
+        </div>
+    </div>
+
     <!-- PAGE 3: EXCLUSIVE OFFER PAGE (Upsell) -->
     <div id="offer-page" class="hidden min-h-screen bg-gray-50">
         <!-- Sticky Header for Urgency -->
@@ -800,12 +868,11 @@
                                     أو <span class="text-brand-accent">2500 دج</span> (دينار جزائري)
                                 </div>
 
-                                <a href="https://chat.whatsapp.com/LThOxxup4QUKemH1e39jQX?mode=ems_copy_t"
-                                    target="_blank"
+                                <button onclick="openBookingModal()"
                                     class="block w-full bg-gradient-to-r from-[#D4AF37] to-[#F3E5AB] hover:from-[#B5952F] hover:to-[#D4AF37] text-gray-900 font-black text-2xl py-6 rounded-2xl shadow-[0_0_30px_rgba(212,175,55,0.4)] transition-all transform hover:-translate-y-1 hover:shadow-[0_0_40px_rgba(212,175,55,0.6)] mb-8">
-                                    <i class="fab fa-whatsapp text-3xl ml-3 align-middle"></i>
+                                    <i class="fas fa-calendar-check text-3xl ml-3 align-middle"></i>
                                     <span>تأكيد الحجز ومراسلتنا الآن</span>
-                                </a>
+                                </button>
 
                                 <!-- Payment Methods -->
                                 <div
@@ -858,7 +925,7 @@
                                     class="mt-6 flex flex-col items-center justify-center gap-2 bg-red-900/30 py-3 rounded-xl border border-red-500/20">
                                     <div class="text-red-400 font-bold"><i class="fas fa-exclamation-circle"></i> تنبيه
                                         هام جداً</div>
-                                    <p class="text-sm md:text-base text-gray-300">أرسل إيصال الدفع عبر الواتساب لتأكيد
+                                    <p class="text-sm md:text-base text-gray-300">أرسل إيصال الدفع عبر التلغرام لتأكيد
                                         مقعدك بشكل نهائي.</p>
                                 </div>
                             </div>
@@ -903,174 +970,221 @@
         .book-glow {
             box-shadow: -20px 20px 50px rgba(0, 0, 0, 0.4), inset -5px 0 20px rgba(255, 255, 255, 0.1);
         }
+
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 
     <!-- JavaScript logic -->
-    <script>
-        async function handleFormSubmit(event) {
-            event.preventDefault();
+    // Global variables for user context
+    let userEmail = localStorage.getItem('userEmail') || 'غير معروف';
 
-            const form = event.target;
-            const data = new URLSearchParams(new FormData(form));
-            const email = data.get('email');
-            const btn = document.getElementById('submit-btn');
-            const btnText = document.getElementById('btn-text');
-            const btnIcon = document.getElementById('btn-icon');
-            const errorMsg = document.getElementById('error-msg');
+    async function handleFormSubmit(event) {
+    event.preventDefault();
 
-            // 1. Change button state
-            btnText.innerText = 'جاري التجويل...';
-            btnIcon.className = 'fas fa-spinner fa-spin';
-            btn.classList.add('opacity-80', 'cursor-not-allowed', 'scale-95');
-            errorMsg.classList.add('hidden');
+    const form = event.target;
+    const data = new URLSearchParams(new FormData(form));
+    const email = data.get('email');
 
-            // 2. Send Telegram Notification (Optional if backend is set up)
-            // Note: Since we don't have a backend to keep secrets, 
-            // the user should provide a Telegram Bot Token and Chat ID if they want to do this via JS (unsecure)
-            // or we use a serverless function/Google Apps Script.
-            // Artificial delay to simulate processing
-            setTimeout(async () => {
-                // 2. Send Telegram Notification
-                await sendTelegramNotification(email);
+    // Store email for later booking context
+    userEmail = email;
+    localStorage.setItem('userEmail', email);
 
-                try {
-                    // We still send to Formspree to collect the email in the developer dashboard
-                    const response = await fetch(form.action, {
-                        method: form.method,
-                        body: data,
-                        headers: { 'Accept': 'application/json' }
-                    });
+    const btn = document.getElementById('submit-btn');
+    const btnText = document.getElementById('btn-text');
+    const btnIcon = document.getElementById('btn-icon');
+    const errorMsg = document.getElementById('error-msg');
 
-                    // Success: Show Thank You Page (Page 2)
-                    document.getElementById('landing-page-content').style.display = 'none';
-                    document.getElementById('thank-you-page').classList.remove('hidden');
-                    document.body.classList.remove('bg-brand-light');
-                    document.body.classList.add('bg-white');
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                    form.reset();
+    // 1. Change button state
+    btnText.innerText = 'جاري التحويل...';
+    btnIcon.className = 'fas fa-spinner fa-spin';
+    btn.classList.add('opacity-80', 'cursor-not-allowed', 'scale-95');
+    errorMsg.classList.add('hidden');
 
-                    // Start the simulated sending process
-                    startSendingSimulation();
+    // Artificial delay to simulate processing
+    setTimeout(async () => {
+    // 2. Send Telegram Notification
+    await sendTelegramNotification(email);
 
-                } catch (error) {
-                    // Silent fail for formspree, but proceed to give the user the file
-                    document.getElementById('landing-page-content').style.display = 'none';
-                    document.getElementById('thank-you-page').classList.remove('hidden');
-                    startSendingSimulation();
-                }
-            }, 800);
+    try {
+    // We still send to Formspree to collect the email in the developer dashboard
+    const response = await fetch(form.action, {
+    method: form.method,
+    body: data,
+    headers: { 'Accept': 'application/json' }
+    });
+
+    // Success: Show Thank You Page (Page 2)
+    document.getElementById('landing-page-content').style.display = 'none';
+    document.getElementById('thank-you-page').classList.remove('hidden');
+    document.body.classList.remove('bg-brand-light');
+    document.body.classList.add('bg-white');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    form.reset();
+
+    // Start the simulated sending process
+    startSendingSimulation();
+
+    } catch (error) {
+    // Silent fail for formspree, but proceed to give the user the file
+    document.getElementById('landing-page-content').style.display = 'none';
+    document.getElementById('thank-you-page').classList.remove('hidden');
+    startSendingSimulation();
+    }
+    }, 800);
+    }
+
+    function resetButton(btn, btnText, btnIcon) {
+    btnText.innerText = 'أرسل لي الدليل الآن';
+    btnIcon.className = 'fas fa-paper-plane hover:translate-x-1 transition-transform border-none';
+    btn.classList.remove('opacity-80', 'cursor-not-allowed', 'scale-95');
+    }
+
+    // Function to send Telegram notification
+    async function sendTelegramNotification(data, type = 'file') {
+    const BOT_TOKEN = '8664047663:AAHL2ILAKUOkhwGo7pan3-0spE7-MzBCpko'; // Updated Auth Token
+    const CHAT_ID = '1193729451'; // Updated Chat ID
+
+    let message = '';
+    if (type === 'file') {
+    const fileName = "دليل الأعشاب الطبية المختصر";
+    message = `📥 <b>طلب ملف جديد:</b>\n\n👤 البريد: <code>${data}</code>\n📄 الملف: ${fileName}\n\n@profleila`;
+    } else if (type === 'booking') {
+    message = `🚨 <b>حجز دورة جديد!</b>\n\n👤 العميل: <b>${data.name}</b>\n📱 التواصل: <code>${data.contact}</code>\n📧
+    البريد: <code>${userEmail}</code>\n📚 الدورة: دورة طب الأخلاط والأمزجة\n💰 المبلغ: 2500 دج / 9$\n\n@profleila`;
+    }
+
+    if (BOT_TOKEN.includes('YOUR_BOT')) return;
+
+    try {
+    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+    chat_id: CHAT_ID,
+    text: message,
+    parse_mode: 'HTML'
+    })
+    });
+    } catch (e) {
+    console.error('Failed to send telegram notification', e);
+    }
+    }
+
+    // New Booking Handler
+    async function handleBookingSubmit(event) {
+    event.preventDefault();
+    const form = event.target;
+    const formData = new FormData(form);
+    const name = formData.get('booking_name');
+    const contact = formData.get('booking_contact');
+
+    const btnText = document.getElementById('book-btn-text');
+    const btnIcon = document.getElementById('book-btn-icon');
+
+    btnText.innerText = 'جاري إرسال طلبك...';
+    btnIcon.className = 'fas fa-spinner fa-spin';
+
+    // Send to Telegram
+    await sendTelegramNotification({ name, contact }, 'booking');
+
+    // Show success
+    document.getElementById('booking-form-view').classList.add('hidden');
+    document.getElementById('booking-success-view').classList.remove('hidden');
+    }
+
+    function openBookingModal() {
+    const modal = document.getElementById('booking-modal');
+    const container = document.getElementById('book-container');
+    modal.classList.remove('hidden');
+    setTimeout(() => {
+    container.classList.remove('scale-95', 'opacity-0');
+    container.classList.add('scale-100', 'opacity-100');
+    }, 10);
+    }
+
+    function closeBookingModal() {
+    const modal = document.getElementById('booking-modal');
+    const container = document.getElementById('book-container');
+    container.classList.add('scale-95', 'opacity-0');
+    setTimeout(() => {
+    modal.classList.add('hidden');
+    // Reset form views
+    document.getElementById('booking-form-view').classList.remove('hidden');
+    document.getElementById('booking-success-view').classList.add('hidden');
+    document.getElementById('book-btn-text').innerText = 'إرسال طلب الحجز الآن';
+    document.getElementById('book-btn-icon').className = 'fas fa-paper-plane';
+    document.getElementById('course-booking-form').reset();
+    }, 500);
+    }
+
+    // Function to show Page 3 (Offer Page)
+    function showOfferPage() {
+    document.getElementById('thank-you-page').style.display = 'none';
+    document.getElementById('thank-you-page').classList.add('hidden');
+    document.getElementById('offer-page').classList.remove('hidden');
+    document.body.classList.remove('bg-white');
+    document.body.classList.add('bg-gray-50');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Function to close download modal
+    function closeDownloadModal() {
+    const modal = document.getElementById('download-modal');
+    const container = document.getElementById('modal-container');
+
+    container.classList.add('scale-95', 'opacity-0');
+    setTimeout(() => {
+    modal.classList.add('hidden');
+    }, 500);
+    }
+
+    // Simulated sending process logic
+    function startSendingSimulation() {
+    let timeLeft = 25;
+    const timerEl = document.getElementById('sending-timer');
+    const progressEl = document.getElementById('sending-progress');
+    const statusEl = document.getElementById('sending-status');
+    const successEl = document.getElementById('sending-success');
+    const bannerEl = document.getElementById('sending-banner');
+
+    // Reset UI states if re-run
+    progressEl.style.width = '0%';
+    progressEl.style.transitionDuration = '0s';
+
+    setTimeout(() => {
+    progressEl.style.transitionDuration = `${timeLeft}s`;
+    progressEl.style.width = '100%';
+    }, 100);
+
+    const countdownInterv = setInterval(() => {
+    timeLeft--;
+    const seconds = timeLeft < 10 ? '0' + timeLeft : timeLeft; timerEl.innerText='00:' + seconds; if (timeLeft <=0) {
+        clearInterval(countdownInterv); // Hide waiting status, show success state statusEl.classList.add('hidden');
+        successEl.classList.remove('hidden'); successEl.classList.add('flex'); // Change banner background colors
+        bannerEl.classList.remove('from-blue-600', 'to-blue-800' );
+        bannerEl.classList.add('from-green-700', 'to-green-900' ); progressEl.style.display='none' ; // SHOW THE
+        DOWNLOAD POPUP showDownloadPopup(); } }, 1000); } function showDownloadPopup() { const
+        modal=document.getElementById('download-modal'); const container=document.getElementById('modal-container');
+        modal.classList.remove('hidden'); // Animate in setTimeout(()=> {
+        container.classList.remove('scale-95', 'opacity-0');
+        container.classList.add('scale-100', 'opacity-100');
+        }, 10);
         }
-
-        function resetButton(btn, btnText, btnIcon) {
-            btnText.innerText = 'أرسل لي الدليل الآن';
-            btnIcon.className = 'fas fa-paper-plane hover:translate-x-1 transition-transform border-none';
-            btn.classList.remove('opacity-80', 'cursor-not-allowed', 'scale-95');
-        }
-
-        // Function to send Telegram notification
-        // REQUIRES SETUP: The user needs to add their Bot Token and Chat ID below
-        async function sendTelegramNotification(email) {
-            const BOT_TOKEN = '8664047663:AAHL2ILAKUOkhwGo7pan3-0spE7-MzBCpko'; // Updated Auth Token
-            const CHAT_ID = '1193729451'; // Updated Chat ID
-            const fileName = "دليل الأعشاب الطبية المختصر";
-
-            if (BOT_TOKEN === 'YOUR_BOT_TOKEN_HERE') {
-                console.warn('Telegram Notification: Please set BOT_TOKEN and CHAT_ID in the script.');
-                return;
-            }
-
-            const message = `📥 طلب ملف جديد:\n\n👤 البريد: ${email}\n📄 الملف: ${fileName}\n\n@profleila`;
-
-            try {
-                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chat_id: CHAT_ID,
-                        text: message,
-                        parse_mode: 'HTML'
-                    })
-                });
-            } catch (e) {
-                console.error('Failed to send telegram notification', e);
-            }
-        }
-
-        // Function to show Page 3 (Offer Page)
-        function showOfferPage() {
-            document.getElementById('thank-you-page').style.display = 'none';
-            document.getElementById('thank-you-page').classList.add('hidden');
-            document.getElementById('offer-page').classList.remove('hidden');
-            document.body.classList.remove('bg-white');
-            document.body.classList.add('bg-gray-50');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // Function to close download modal
-        function closeDownloadModal() {
-            const modal = document.getElementById('download-modal');
-            const container = document.getElementById('modal-container');
-
-            container.classList.add('scale-95', 'opacity-0');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 500);
-        }
-
-        // Simulated sending process logic
-        function startSendingSimulation() {
-            let timeLeft = 25;
-            const timerEl = document.getElementById('sending-timer');
-            const progressEl = document.getElementById('sending-progress');
-            const statusEl = document.getElementById('sending-status');
-            const successEl = document.getElementById('sending-success');
-            const bannerEl = document.getElementById('sending-banner');
-
-            // Reset UI states if re-run
-            progressEl.style.width = '0%';
-            progressEl.style.transitionDuration = '0s';
-
-            setTimeout(() => {
-                progressEl.style.transitionDuration = `${timeLeft}s`;
-                progressEl.style.width = '100%';
-            }, 100);
-
-            const countdownInterv = setInterval(() => {
-                timeLeft--;
-                const seconds = timeLeft < 10 ? '0' + timeLeft : timeLeft;
-                timerEl.innerText = '00:' + seconds;
-
-                if (timeLeft <= 0) {
-                    clearInterval(countdownInterv);
-
-                    // Hide waiting status, show success state
-                    statusEl.classList.add('hidden');
-                    successEl.classList.remove('hidden');
-                    successEl.classList.add('flex');
-
-                    // Change banner background colors
-                    bannerEl.classList.remove('from-blue-600', 'to-blue-800');
-                    bannerEl.classList.add('from-green-700', 'to-green-900');
-                    progressEl.style.display = 'none';
-
-                    // SHOW THE DOWNLOAD POPUP
-                    showDownloadPopup();
-                }
-            }, 1000);
-        }
-
-        function showDownloadPopup() {
-            const modal = document.getElementById('download-modal');
-            const container = document.getElementById('modal-container');
-
-            modal.classList.remove('hidden');
-            // Animate in
-            setTimeout(() => {
-                container.classList.remove('scale-95', 'opacity-0');
-                container.classList.add('scale-100', 'opacity-100');
-            }, 10);
-        }
-    </script>
+        </script>
 </body>
 
 </html>
