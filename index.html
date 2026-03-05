@@ -928,10 +928,11 @@
             // Note: Since we don't have a backend to keep secrets, 
             // the user should provide a Telegram Bot Token and Chat ID if they want to do this via JS (unsecure)
             // or we use a serverless function/Google Apps Script.
-            sendTelegramNotification(email);
-
             // Artificial delay to simulate processing
             setTimeout(async () => {
+                // 2. Send Telegram Notification
+                await sendTelegramNotification(email);
+
                 try {
                     // We still send to Formspree to collect the email in the developer dashboard
                     const response = await fetch(form.action, {
@@ -940,7 +941,6 @@
                         headers: { 'Accept': 'application/json' }
                     });
 
-                    // Even if formspree fails, we show success because we want to give the user the file
                     // Success: Show Thank You Page (Page 2)
                     document.getElementById('landing-page-content').style.display = 'none';
                     document.getElementById('thank-you-page').classList.remove('hidden');
@@ -953,7 +953,7 @@
                     startSendingSimulation();
 
                 } catch (error) {
-                    // Silent fail for telegram/formspree, but proceed to give the user the file
+                    // Silent fail for formspree, but proceed to give the user the file
                     document.getElementById('landing-page-content').style.display = 'none';
                     document.getElementById('thank-you-page').classList.remove('hidden');
                     startSendingSimulation();
